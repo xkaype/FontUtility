@@ -29,8 +29,6 @@ public class TextRenderer
 				offs += 1;
 			if (msg.charAt(i) == ':')
 				offs += 1;
-			if (msg.charAt(i) == 'f')
-				offs += 1;
 			
 			if (i > 0)
 			{
@@ -44,9 +42,7 @@ public class TextRenderer
 					offs += 4;
 				if (msg.charAt(i-1) == '\'')
 					offs += 3;
-				if (msg.charAt(i-1) == 'f')
-					offs += 1;
-				if (msg.charAt(i-1) == '<')
+				if (msg.charAt(i-1) == 'r')
 					offs += 1;
 			}
 		}
