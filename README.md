@@ -9,4 +9,4 @@ FÖNTS is a tool for converting regular bitmap/png font files to ImageFonts in L
  
 
 **Downloads:**  
-To get FÖNTS, see the [releases](https://github.com/xkaype/FONTS/releases/).
+To get FÖNTS, see the [releases](https://github.com/xkaype/FontUtility/releases/).
