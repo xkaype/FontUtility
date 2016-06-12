@@ -6,41 +6,52 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import co.kaype.fc.fwk.Display;
-import co.kaype.fc.fwk.ImageFilter;
-import co.kaype.fc.gui.Button;
-import co.kaype.fc.gui.Component;
-import co.kaype.fc.gui.TextRenderer;
-import co.kaype.fc.img.Image;
-import co.kaype.fc.img.ImageLoader;
-import co.kaype.fc.img.SpriteSheet;
+import co.kaype.fc.gui.*;
+import co.kaype.fc.img.*;
 
+//
+// This code was really quickly written because I wanted to convert some fonts over to work with LÖVE.
+// Eventually I'll rewrite it.
+//
 public class App
 {
+	// App instance
 	private static final App instance = new App();
 
+	// GUI scale
 	public static final int SCALE = 2;
-
+	
+	// The window and everything on it
 	public Display display;
 	public Image screen;
-
+	
+	// List of GUI components
 	public ArrayList<Component> gui = new ArrayList<Component>();
-
+	
+	// Count of each frame
 	public int time = 0;
-
+	
+	// The status of the font and the image it gets tossed into
 	public Image fontImage = new Image(2, 2);
 	public boolean fontLoaded = false;
-
-	public SpriteSheet mascot = new SpriteSheet("/mascot.png", 16, 16);
+	
+	// The little mascot thing
+	public SpriteSheet fontsMascot = new SpriteSheet("/mascot.png", 16, 16);
+	
+	// The convert/render buttons
 	public Button convertButton, renderButton;
-
-	public static JFileChooser fc;
-
+	
+	// The file chooser
+	public static JFileChooser fileChooser;
+	
+	//
+	// MAIN FUNCTION
+	//
 	public static void main(String[] args)
 	{
 		try
@@ -59,17 +70,20 @@ public class App
 			e.printStackTrace();
 		}
 
-		fc = new JFileChooser();
-		fc.setAcceptAllFileFilterUsed(false);
-		fc.setFileFilter(new ImageFilter());
-
-		getInstance().init();
+		FileNameExtensionFilter fileFilter = new FileNameExtensionFilter("PNG image (*.png)", "png");
+		fileChooser = new JFileChooser();
+		fileChooser.setFileFilter(fileFilter);
+		
+		instance.init();
 	}
-
+	
+	//
+	// Set up the GUI
+	//
 	public void init()
 	{
 		TextRenderer.init();
-
+		
 		gui.add(new Button("Load Font", 16, 32)
 		{
 			public void onAction()
@@ -91,17 +105,20 @@ public class App
 
 		screen = new Image(display.getScaledWidth(), display.getScaledHeight());
 	}
-
+	
+	//
+	// Load up that font, yo
+	//
 	public void loadFont()
 	{
 		fontImage = new Image(2, 2);
 		fontLoaded = false;
 
-		fc.showOpenDialog(display.getFrame());
+		fileChooser.showOpenDialog(display.getFrame());
 
-		if (fc.getSelectedFile() != null)
+		if (fileChooser.getSelectedFile() != null)
 		{
-			String path = fc.getSelectedFile().getAbsolutePath();
+			String path = fileChooser.getSelectedFile().getAbsolutePath();
 			System.out.println("Loading from: " + path);
 			fontImage = ImageLoader.loadImageFromSystem(path);
 		}
@@ -111,7 +128,10 @@ public class App
 	public SpriteSheet fontSheet;
 	public int fontWidth, fontHeight;
 	public boolean fontConverted;
-
+	
+	//
+	// I suppose this is a rather silly way of getting the size of each character, but it works.
+	//
 	public void convertFont()
 	{
 		String s = (String) JOptionPane.showInputDialog(display.getFrame(), "Please enter the individual character dimensions, e.g. 6x8");
@@ -122,16 +142,19 @@ public class App
 
 		fontSheet = new SpriteSheet(fontImage, fontWidth, fontHeight);
 	}
-
+	
+	//
+	// Export the font!
+	//
 	public void renderFont()
 	{
-		fc.showSaveDialog(display.getFrame());
+		fileChooser.showSaveDialog(display.getFrame());
 
-		if (fc.getSelectedFile() != null)
+		if (fileChooser.getSelectedFile() != null)
 		{
 			try
 			{
-				String path = fc.getSelectedFile().getAbsolutePath();
+				String path = fileChooser.getSelectedFile().getAbsolutePath();
 				System.out.println("Saving to: " + path);
 				BufferedImage output = ImageLoader.toBufferedImage(fontBuffer);
 				ImageIO.write(output, "png", new File(path));
@@ -143,15 +166,22 @@ public class App
 		}
 	}
 	
+	//
+	// This is called whenever we resize the window.
+	//
 	public void resize()
 	{
 		screen = new Image(display.getScaledWidth(), display.getScaledHeight());
 	}
-
+	
+	// Blinking effect on the mascot thingy
 	private int xTime = 160;
 	private int blinkEnd = 0, blinkStart = 0;
 	private boolean blink = true;
 
+	//
+	// Update program
+	//
 	public void update()
 	{
 		time += 6;
@@ -215,7 +245,10 @@ public class App
 			}
 		}
 	}
-
+	
+	//
+	// Render program
+	//
 	public void render()
 	{
 		screen.clear(0xFF222222);
@@ -271,16 +304,22 @@ public class App
 			}
 		}
 
-		screen.drawImage(mascot.getImage(blink ? 1 : 0, 0), 2, 116, 14);
+		screen.drawImage(fontsMascot.getImage(blink ? 1 : 0, 0), 2, 116, 14);
 
 		fadeIn();
 	}
-
+	
+	//
+	// This checks if the alpha value of a pixel is 0.
+	//
 	private boolean isBlank(int res)
 	{
 		return (((res >> 24) & 0xff) == 0);
 	}
-
+	
+	//
+	// Do the fade in effect you see when you open the program.
+	//
 	private void fadeIn()
 	{
 		int delay = 160;
@@ -306,6 +345,8 @@ public class App
 			}
 		}
 	}
+	
+	//
 
 	public static App getInstance()
 	{

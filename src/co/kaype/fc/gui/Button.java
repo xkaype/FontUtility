@@ -2,18 +2,30 @@ package co.kaype.fc.gui;
 
 import co.kaype.fc.img.Image;
 
+//
+// A GUI Button
+//
 public class Button extends Component
 {
+	//
+	// Creates the button
+	//
 	public Button(String msg, int x, int y)
 	{
 		super(msg, x, y, TextRenderer.getWidth(msg) + 8, 12);
 	}
 	
+	//
+	// Updates the button
+	//
 	public void update()
 	{
 		super.update();
 	}
 	
+	//
+	// Renders the button
+	//
 	public void render(Image surface)
 	{
 		int col = (!isHovered() ? 0x545454 : 0x646464);

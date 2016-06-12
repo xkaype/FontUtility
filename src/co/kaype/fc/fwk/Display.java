@@ -12,22 +12,37 @@ import javax.swing.JFrame;
 
 import co.kaype.fc.App;
 
+//
+// It's a bit verbose for just a window.
+// Welcome to Java, son!
+//
 public class Display extends Canvas implements Runnable
 {
 	private static final long serialVersionUID = 1L;
 
+	// The JFrame used by the display
 	private JFrame frame;
+	
+	// The BufferedImage and BufferStrategy the program uses for drawing graphics
 	private BufferedImage viewport;
 	private BufferStrategy viewportBs;
 	private int[] viewportPx;
 	
+	// Whether or not the program is running
 	private boolean running = false;
 
+	// The display title
 	private String title;
+	
+	// The display dimensions
 	private int width, height, scale;
 	
+	// The FPS
 	private int fps;
 	
+	//
+	// Creates the display
+	//
 	public Display(String title, int width, int height, int scale)
 	{
 		this.title = title;
@@ -37,12 +52,15 @@ public class Display extends Canvas implements Runnable
 		
 		setSize(width, height);
 
-		InputAssistant inputAssistant = new InputAssistant();
+		InputHandler inputAssistant = new InputHandler();
 		addKeyListener(inputAssistant);
 		addMouseListener(inputAssistant);
 		addMouseMotionListener(inputAssistant);
 	}
 	
+	//
+	// Initializes the display
+	//
 	public void init()
 	{
 		frame = new JFrame(title);
@@ -57,12 +75,20 @@ public class Display extends Canvas implements Runnable
 		start();
 	}
 	
+	//
+	// Initializes the BufferedImage the program draws graphics to
+	//
 	public void initViewport()
 	{
 		viewport = new BufferedImage(width / scale, height / scale, BufferedImage.TYPE_INT_RGB);
 		viewportPx = ((DataBufferInt) viewport.getRaster().getDataBuffer()).getData();
 	}
-
+	
+	//
+	// Creates a buffer strategy
+	// Starts the program
+	// Spins up a new thread
+	//
 	public void start()
 	{
 		createBufferStrategy(3);
@@ -73,7 +99,10 @@ public class Display extends Canvas implements Runnable
 
 		new Thread(this).start();
 	}
-
+	
+	//
+	// Stops the program
+	//
 	public void stop()
 	{
 		if (running)
@@ -147,9 +176,10 @@ public class Display extends Canvas implements Runnable
 			}
 		}
 	}
-
-	public int myWidth, myHeight;
 	
+	//
+	// Updates the display
+	//
 	public void update()
 	{
 		if (width != getWidth() || height != getHeight())
@@ -164,6 +194,9 @@ public class Display extends Canvas implements Runnable
 		App.getInstance().update();
 	}
 	
+	//
+	// Renders the display
+	//
 	public void render()
 	{
 		Graphics g = viewportBs.getDrawGraphics();
@@ -189,36 +222,57 @@ public class Display extends Canvas implements Runnable
 		viewportBs.show();
 	}
 	
+	//
+	// Destroys the display
+	//
 	public void destroy()
 	{
 		frame.dispose();
 	}
 	
+	//
+	// Returns the JFrame this uses
+	//
 	public JFrame getFrame()
 	{
 		return frame;
 	}
-
+	
+	//
+	// Returns the BufferedImage used for drawing the screen
+	//
 	public BufferedImage getViewport()
 	{
 		return viewport;
 	}
 	
+	//
+	// Returns the scaled width of the display
+	//
 	public int getScaledWidth()
 	{
 		return width / scale;
 	}
-	
+
+	//
+	// Returns the scaled height of the display
+	//
 	public int getScaledHeight()
 	{
 		return height / scale;
 	}
 	
+	//
+	// Returns the scale of the display
+	//
 	public int getScale()
 	{
 		return scale;
 	}
 	
+	//
+	// Returns the FPS
+	//
 	public int getDisplayFPS()
 	{
 		return fps;

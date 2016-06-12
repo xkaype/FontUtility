@@ -1,10 +1,19 @@
 package co.kaype.fc.img;
 
+//
+// Very basic image class
+//
 public class Image
 {
+	// Width / Height
 	public int w, h;
+	
+	// Pixels
 	public int[] px;
-
+	
+	//
+	// Creates a new image with a specified width and height
+	//
 	public Image(int w, int h)
 	{
 		this.w = w;
@@ -12,18 +21,27 @@ public class Image
 
 		px = new int[w * h];
 	}
-
+	
+	//
+	// Clears the image
+	//
 	public void clear()
 	{
 		clear(0);
 	}
 
+	//
+	// Clears an image with a specified color
+	//
 	public void clear(int v)
 	{
 		for (int i = 0; i < px.length; i++)
 			px[i] = v;
 	}
 	
+	//
+	// Draws a rectangle
+	//
 	public void drawRect(int v, double xo, double yo, int wo, int ho)
 	{
 		for (int x = 0; x < wo; x++)
@@ -44,7 +62,10 @@ public class Image
 			}
 		}
 	}
-
+	
+	//
+	// Draws a point
+	//
 	public void drawPoint(int v, double x, double y)
 	{
 		int ix = (int) (x);
@@ -53,12 +74,18 @@ public class Image
 		if ((ix >= 0 && ix < w) && (iy >= 0 && iy < h))
 			px[ix + iy * w] = v;
 	}
-
+	
+	//
+	// Draws an image
+	//
 	public void drawImage(Image img, double xo, double yo)
 	{
 		drawImage(img, 1, xo, yo);
 	}
-
+	
+	//
+	// Draws a scaled image
+	//
 	public void drawImage(Image img, int scale, double xo, double yo)
 	{
 		for (int y = 0; y < img.h * scale; y++)

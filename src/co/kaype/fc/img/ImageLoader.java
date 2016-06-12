@@ -5,8 +5,14 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
+//
+// An image loader
+//
 public class ImageLoader
 {
+	//
+	// Load image from /res/
+	//
 	public static Image loadImage(String ref)
 	{
 		try
@@ -19,6 +25,9 @@ public class ImageLoader
 		}
 	}
 	
+	//
+	// Load external image
+	//
 	public static Image loadImageFromSystem(String ref)
 	{
 		try
@@ -31,6 +40,9 @@ public class ImageLoader
 		}
 	}
 	
+	//
+	// Load image from an AWT BufferedImage
+	//
 	public static Image loadImage(BufferedImage image)
 	{
 		try
@@ -47,6 +59,9 @@ public class ImageLoader
 		}
 	}
 	
+	//
+	// Convert image to AWT BufferedImage
+	//
 	public static BufferedImage toBufferedImage(Image image)
 	{
 		try
